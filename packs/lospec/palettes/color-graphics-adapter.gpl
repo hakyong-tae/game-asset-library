@@ -1,0 +1,20 @@
+GIMP Palette
+Name: Color Graphics Adapter
+Columns: 8
+#
+  0   0   0	000000
+ 85  85  85	555555
+170 170 170	aaaaaa
+255 255 255	ffffff
+  0   0 170	0000aa
+ 85  85 255	5555ff
+  0 170   0	00aa00
+ 85 255  85	55ff55
+  0 170 170	00aaaa
+ 85 255 255	55ffff
+170   0   0	aa0000
+255  85  85	ff5555
+170   0 170	aa00aa
+255  85 255	ff55ff
+170  85   0	aa5500
+255 255  85	ffff55

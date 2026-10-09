@@ -1,0 +1,8 @@
+GIMP Palette
+Name: CGA Palette 1 (High)
+Columns: 8
+#
+  0   0   0	000000
+255  85 255	ff55ff
+ 85 255 255	55ffff
+255 255 255	ffffff
