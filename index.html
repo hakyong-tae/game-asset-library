@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Asset Library — 무료(CC0) 게임 에셋 검색</title>
+<meta name="description" content="Kenney·Quaternius·KayKit·Poly Haven·OpenGameArt 등 CC0 게임 에셋을 검색하고 URL로 바로 쓰는 라이브러리. AI에 한 번 연결하면 id만 말해도 된다.">
+<style>
+:root{
+  --bg:#0d0f14; --panel:#14171f; --card:#181c26; --line:#252a37; --text:#e6e8ee; --dim:#8b92a5; --faint:#5d6477;
+  --accent:#8b7cf6; --accent2:#6ee7b7; --warn:#f5b45a; --r:10px;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: light){
+  :root{ --bg:#f6f7fb; --panel:#fff; --card:#fff; --line:#e2e5ee; --text:#1b1f2a; --dim:#5c6478; --faint:#8a91a4; --accent:#6a5bd8; --accent2:#0f9d73; --warn:#b97512; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Segoe UI,sans-serif;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--accent)}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{font-weight:700;font-size:17px;letter-spacing:-.2px;display:flex;align-items:baseline;gap:8px}
+.brand small{color:var(--dim);font-weight:400;font-size:12px}
+.search{flex:1 1 280px;max-width:520px;position:relative}
+.search input{width:100%;height:36px;border-radius:18px;border:1px solid var(--line);background:var(--bg);color:var(--text);padding:0 14px;font:inherit;outline:none}
+.search input:focus{border-color:var(--accent)}
+.count{color:var(--dim);font-family:var(--mono);font-size:12px;white-space:nowrap}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:5px 11px;font-size:12.5px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.btn.sm{padding:2px 8px;font-size:11.5px;border-radius:6px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 18px;border-bottom:1px solid var(--line)}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 12px;font-size:12.5px;color:var(--dim)}
+.chip b{font-weight:500;color:var(--faint);margin-left:4px;font-size:11px}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.on b{color:#ffffffb0}
+select{background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font:inherit;font-size:12.5px}
+.sp{flex:1}
+.wrap{flex:1;min-height:0;display:flex}
+.list{flex:1;min-width:0;overflow:auto;padding:16px 18px 40px}
+.detail{width:min(460px,40vw);border-left:1px solid var(--line);background:var(--panel);overflow:auto;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;text-align:left;padding:0;position:relative}
+.card:hover,.card.sel{border-color:var(--accent)}
+.card .im{aspect-ratio:1/1;background:repeating-conic-gradient(#ffffff08 0 25%,transparent 0 50%) 50%/16px 16px;display:grid;place-items:center;position:relative}
+.card .im img{max-width:100%;max-height:100%;object-fit:contain}
+.card .im img.px{image-rendering:pixelated}
+.card .ph{font-size:34px;opacity:.8}
+.tag{position:absolute;left:6px;top:6px;font-size:10.5px;padding:1px 7px;border-radius:999px;background:#000a;color:#fff}
+.lic{position:absolute;right:6px;top:6px;font-size:10px;padding:1px 6px;border-radius:999px;background:#0a7a55cc;color:#fff}
+.lic.by{background:#b97512cc}
+.lic.unk{background:#7a3b3bcc}
+.ext-note{border:1px dashed var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0;color:var(--warn);font-size:12px}
+.meta{display:flex;align-items:center;gap:6px;padding:7px 9px}
+.meta .nm{flex:1;min-width:0;font-family:var(--mono);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub{padding:0 9px 8px;color:var(--faint);font-size:11px;font-family:var(--mono)}
+h2{font-size:12px;letter-spacing:.4px;text-transform:uppercase;color:var(--dim);margin:20px 0 8px;font-weight:600}
+.empty{color:var(--dim);text-align:center;margin:60px 20px;line-height:1.8}
+.dt h1{font-size:17px;margin:0 0 4px;word-break:break-word}
+.dt .id{font-family:var(--mono);font-size:12px;color:var(--accent2);word-break:break-all}
+.pv{margin:12px 0;border:1px solid var(--line);border-radius:var(--r);background:repeating-conic-gradient(#ffffff08 0 25%,transparent 0 50%) 50%/16px 16px;min-height:180px;display:grid;place-items:center;overflow:hidden;position:relative}
+.pv img{max-width:100%;max-height:340px;object-fit:contain}
+.pv img.px{image-rendering:pixelated}
+.pv model-viewer{width:100%;height:320px;background:transparent}
+.pv audio{width:92%}
+.pv .ph{font-size:56px;opacity:.7;padding:30px}
+.pv .cap{position:absolute;left:8px;bottom:6px;font-size:11px;font-family:var(--mono);color:var(--dim);background:#0008;padding:1px 6px;border-radius:5px;max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+dl{display:grid;grid-template-columns:70px 1fr;gap:4px 10px;margin:10px 0;font-size:12.5px}
+dt{color:var(--dim)} dd{margin:0;word-break:break-word}
+.row{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tags span{font-size:11px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--dim)}
+.files{margin-top:6px}
+.files input{width:100%;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);padding:0 10px;font:inherit;font-size:12.5px;margin-bottom:8px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px}
+.fi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px;text-align:center;font-size:10px;color:var(--dim);overflow:hidden;min-width:0}
+.fi:hover,.fi.sel{border-color:var(--accent)}
+.fi img{width:100%;height:56px;object-fit:contain;display:block}
+.fi img.px{image-rendering:pixelated}
+.fi span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--mono);margin-top:2px}
+.frow{display:flex;align-items:center;gap:8px;width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 9px;margin-bottom:4px;text-align:left;font-size:12px}
+.frow:hover,.frow.sel{border-color:var(--accent)}
+.frow .n{flex:1;min-width:0;font-family:var(--mono);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frow .s{color:var(--faint);font-size:11px}
+.pager{display:flex;align-items:center;gap:8px;justify-content:center;margin:10px 0;color:var(--dim);font-size:12px}
+pre.snip{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font:11.5px/1.55 var(--mono);overflow:auto;white-space:pre;margin:6px 0}
+.hint{color:var(--faint);font-size:11.5px;margin:8px 0}
+.warn{color:var(--warn);font-size:12px}
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.pal button{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px;text-align:left}
+.pal .sw{display:flex;height:22px;border-radius:5px;overflow:hidden;margin-bottom:5px}
+.pal .sw i{flex:1}
+.pal small{font-size:11px;color:var(--dim);display:block;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#111;color:#fff;border:1px solid var(--accent);padding:8px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90vw}
+.toast.on{opacity:1}
+.close{display:none}
+@media (max-width:860px){
+  .detail{position:fixed;inset:0;width:auto;z-index:10;border:0;transform:translateX(100%);transition:transform .2s}
+  .detail.open{transform:none}
+  .close{display:inline-block}
+  .top{padding:10px 12px}.filters,.list{padding-left:12px;padding-right:12px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">Game Asset Library <small id="sub">…</small></div>
+  <div class="search"><input id="q" type="search" placeholder="검색 — sword, hexagon, coin, forest, jump…" autocomplete="off"></div>
+  <span class="count" id="cnt"></span>
+  <button class="btn" id="reset">초기화</button>
+  <button class="btn primary" id="ai" title="쓰는 AI 도구의 규칙 파일(CLAUDE.md 등)에 프로젝트당 한 번만 붙여넣으면 됩니다. 그 뒤로는 id만 말하면 됩니다">AI에 연결하기</button>
+  <a class="btn" id="gh" href="https://github.com/hakyong-tae/game-asset-library" target="_blank" rel="noopener">GitHub</a>
+</header>
+<div class="filters" id="filters"></div>
+<div class="wrap">
+  <main class="list" id="list"><div class="empty">불러오는 중…</div></main>
+  <aside class="detail" id="detail"><div class="empty">왼쪽에서 팩을 고르세요.<br>미리보기·정보·복사용 URL이 여기 나타납니다.</div></aside>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var S={packs:[],vols:{},by:{},type:'all',source:'all',lic:'all',q:'',sel:null,idx:null,idxLoading:false,files:{},page:0,ff:'',curFile:null};
+var TYPES=[['all','전체'],['2d','2D'],['3d','3D'],['audio','오디오'],['texture','텍스처'],['icon','아이콘'],['hdri','HDRI'],['palette','팔레트']];
+var GLYPH={'2d':'🖼','3d':'🧊',audio:'🔊',texture:'🧱',icon:'⚔',hdri:'🌅',palette:'🎨'};
+var SRC={kenney:'Kenney',oga:'OpenGameArt',itch:'itch.io',ph:'Poly Haven',superpowers:'Superpowers','game-icons':'game-icons.net',lospec:'Lospec',nc:'나인크로니클(정민)'};
+var TYPE_LABEL=Object.fromEntries(TYPES);
+var IMG=/\.(png|jpe?g|gif|webp|svg)$/i, AUD=/\.(ogg|mp3|wav)$/i, MOD=/\.(glb|gltf)$/i, FONT=/\.(ttf|otf|woff2?)$/i;
+
+function srcKey(p){return p.id.split('/')[0]}
+function enc(rel){return rel.split('/').map(encodeURIComponent).join('/')}
+function packBase(p){return p.ext?p.base:S.vols[p.volume].base+p.path}
+function thumbUrl(p){return /^https?:/.test(p.thumb)?p.thumb:S.vols.main.base+p.thumb}
+function licBadge(p){return p.license==='CC0'?['CC0','']:p.license==='CC BY 3.0'?['CC BY',' by']:['미확인',' unk']}
+function fname(f){return f[2]||f[0].split('/').pop()}
+function fileUrl(p,rel){return packBase(p)+enc(rel)}
+function mb(b){return b>=1e6?(b/1e6).toFixed(b>1e8?0:1)+' MB':Math.max(1,Math.round(b/1e3))+' KB'}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function node(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n}
+function toast(t){var e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},2200)}
+function copyText(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(t).catch(fb);
+  return fb(); function fb(){var a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove();return Promise.resolve()}
+}
+function copyBtn(label,text,msg){var b=node('button','btn sm',label);b.onclick=function(e){e.stopPropagation();copyText(text).then(function(){toast(msg||'복사됨')})};return b}
+
+/* 한 줄 설명: AI 연결 프롬프트를 이미 붙였다면 이것(id)만으로 충분 */
+function packLine(p){
+  var f=p.formats.slice(0,4).join('/');
+  return p.id+' — '+packBase(p)+' ('+TYPE_LABEL[p.type]+(f?', '+f:'')+', 파일 '+p.files+'개, '+p.license+')';
+}
+function getCmd(p,dest){
+  return "curl -sL "+S.vols.main.base+"tools/use.mjs | node - get "+p.id+" "+(dest||('public/assets/'+p.id.split('/').pop()));
+}
+
+/* ---------- 필터/검색 ---------- */
+function match(p,toks){
+  if(!p._h) p._h=(p.id+' '+p.name+' '+p.tags.join(' ')+' '+p.author+' '+(SRC[srcKey(p)]||'')+' '+TYPE_LABEL[p.type]).toLowerCase();
+  for(var i=0;i<toks.length;i++) if(p._h.indexOf(toks[i])<0) return false; return true;
+}
+function visible(){
+  var toks=S.q.toLowerCase().split(/\s+/).filter(Boolean);
+  return S.packs.filter(function(p){
+    if(S.type!=='all'&&p.type!==S.type) return false;
+    if(S.source!=='all'&&srcKey(p)!==S.source) return false;
+    if(S.lic!=='all'&&p.license!==S.lic) return false;
+    return match(p,toks);
+  });
+}
+function renderFilters(){
+  var box=$('#filters'); box.innerHTML='';
+  var cnt={all:S.packs.length}; S.packs.forEach(function(p){cnt[p.type]=(cnt[p.type]||0)+1});
+  TYPES.forEach(function(t){ if(t[0]!=='all'&&!cnt[t[0]]) return;
+    var b=node('button','chip'+(S.type===t[0]?' on':''),t[1]); var c=node('b',null,cnt[t[0]]||0); b.appendChild(c);
+    b.onclick=function(){S.type=t[0];sync()}; box.appendChild(b)});
+  box.appendChild(node('span','sp'));
+  var s1=node('select'); s1.appendChild(new Option('출처: 전체','all'));
+  Object.keys(SRC).forEach(function(k){ if(S.packs.some(function(p){return srcKey(p)===k})) s1.appendChild(new Option(SRC[k],k))}); s1.value=S.source; s1.onchange=function(){S.source=s1.value;sync()};
+  var s2=node('select'); [['all','라이선스: 전체'],['CC0','CC0'],['CC BY 3.0','CC BY (표기 필요)'],['미확인','미확인(외부 연결)']].forEach(function(o){s2.appendChild(new Option(o[1],o[0]))}); s2.value=S.lic; s2.onchange=function(){S.lic=s2.value;sync()};
+  box.appendChild(s1);box.appendChild(s2);
+}
+function card(p){
+  var c=node('div','card'+(S.sel===p.id?' sel':'')); c.tabIndex=0; c.setAttribute('role','button');
+  var im=node('div','im');
+  if(p.thumb){var img=new Image();img.loading='lazy';img.alt='';img.src=thumbUrl(p); if(p.type==='2d'||p.type==='icon') img.className='px'; im.appendChild(img)}
+  else im.appendChild(node('div','ph',GLYPH[p.type]||'📦'));
+  im.appendChild(node('span','tag',TYPE_LABEL[p.type]+(p.sub?' · '+p.sub:'')));
+  var lb=licBadge(p); im.appendChild(node('span','lic'+lb[1],lb[0]));
+  c.appendChild(im);
+  var m=node('div','meta'); var nm=node('span','nm',p.name); nm.title=p.id; m.appendChild(nm); m.appendChild(copyBtn('복사',packLine(p),'복사됨 — id·주소 한 줄')); c.appendChild(m);
+  c.appendChild(node('div','sub',p.ext?p.files.toLocaleString()+' 항목 · 외부 링크':p.files.toLocaleString()+' 파일 · '+mb(p.bytes)));
+  c.onclick=function(){openPack(p.id)}; c.onkeydown=function(e){if(e.key==='Enter')openPack(p.id)};
+  return c;
+}
+function renderList(){
+  var list=$('#list'); list.innerHTML=''; var v=visible();
+  $('#cnt').textContent=v.length.toLocaleString()+' / '+S.packs.length.toLocaleString()+'팩';
+  var toks=S.q.toLowerCase().split(/\s+/).filter(Boolean);
+  if(v.length){ if(toks.length) list.appendChild(node('h2',null,'팩 일치 '+v.length)); var g=node('div','grid'); v.slice(0,600).forEach(function(p){g.appendChild(card(p))}); list.appendChild(g);
+    if(v.length>600) list.appendChild(node('div','hint','상위 600개만 표시 — 검색어/필터로 좁혀 보세요.')); }
+  if(toks.join('').length>=2){ fileHits(toks,list); }
+  if(!v.length&&toks.join('').length<2) list.appendChild(node('div','empty','조건에 맞는 팩이 없습니다.'));
+}
+/* 파일 이름 단위 검색: search.json (첫 검색 때 지연 로드) */
+function fileHits(toks,list){
+  if(!S.idx){ if(!S.idxLoading){S.idxLoading=true;fetch('search.json').then(function(r){return r.json()}).then(function(j){S.idx=j;renderList()})} list.appendChild(node('div','hint','파일 이름 색인을 불러오는 중…')); return }
+  var hits=[],E=S.idx.e,ids=S.idx.ids,seen=0;
+  for(var i=0;i<E.length&&hits.length<72;i++){ var nm=E[i][1],ok=true; for(var k=0;k<toks.length;k++) if(nm.indexOf(toks[k])<0&&ids[E[i][0]].toLowerCase().indexOf(toks[k])<0){ok=false;break}
+    if(!ok) continue; var p=S.by[ids[E[i][0]]]; if(!p) continue;
+    if(S.type!=='all'&&p.type!==S.type) continue; if(S.source!=='all'&&srcKey(p)!==S.source) continue; if(S.lic!=='all'&&p.license!==S.lic) continue; hits.push([p,nm]) }
+  S.packs.forEach(function(p){ if(!p.ext) return; if(S.type!=='all'&&p.type!==S.type) return; if(S.source!=='all'&&srcKey(p)!==S.source) return; if(S.lic!=='all'&&p.license!==S.lic) return;
+    var n=0; p._files.forEach(function(f){ if(n>=40) return; var nm=(f[2]||f[0]).toLowerCase(); if(toks.every(function(t){return nm.indexOf(t)>=0})){ n++; hits.push([p,f[2]||f[0]]) } }) });
+  if(!hits.length) return;
+  list.appendChild(node('h2',null,'파일 이름 일치'+(hits.length>=72?' (상위 72)':'')));
+  var box=node('div'); hits.forEach(function(h){ var p=h[0],nm=h[1];
+    var r=node('button','frow'); r.appendChild(node('span','s',GLYPH[p.type]||'')); r.appendChild(node('span','n',nm)); r.appendChild(node('span','s',p.name));
+    r.onclick=function(){openPack(p.id,nm)}; box.appendChild(r)}); list.appendChild(box);
+}
+
+/* ---------- 상세 ---------- */
+function loadFiles(p){
+  if(p.ext) return Promise.resolve(p._files);
+  if(S.files[p.id]) return Promise.resolve(S.files[p.id]);
+  return fetch('files/'+p.id.replace(/\//g,'__')+'.json').then(function(r){return r.json()}).then(function(a){S.files[p.id]=a;return a});
+}
+function openPack(id,ff){
+  var p=S.by[id]; if(!p) return; S.sel=id; S.page=0; S.curFile=null; S.ff=ff||'';
+  var d=$('#detail'); d.classList.add('open'); writeHash();
+  document.querySelectorAll('.card.sel').forEach(function(c){c.classList.remove('sel')});
+  renderDetail(p); renderList();
+}
+function pvPlaceholder(p){var w=node('div','ph',GLYPH[p.type]||'📦');return w}
+function renderDetail(p){
+  var d=$('#detail'); d.innerHTML=''; var dt=node('div','dt'); d.appendChild(dt);
+  var close=node('button','btn sm close','← 목록'); close.onclick=function(){d.classList.remove('open');S.sel=null;writeHash();renderList()}; dt.appendChild(close);
+  dt.appendChild(node('h1',null,p.name)); dt.appendChild(node('div','id',p.id));
+  var pv=node('div','pv'); pv.id='pv'; dt.appendChild(pv); showPreview(p,null);
+  var dl=node('dl'); function kv(k,v){dl.appendChild(node('dt',null,k)); var dd=node('dd'); if(typeof v==='string') dd.textContent=v; else dd.appendChild(v); dl.appendChild(dd)}
+  kv('유형',TYPE_LABEL[p.type]+(p.sub?' · '+p.sub:''));
+  kv('라이선스',p.license==='CC0'?'CC0 (크레딧 불필요)':p.license==='CC BY 3.0'?'CC BY 3.0 — 크레딧 필수':'미확인 — 아래 안내 참고');
+  if(p.evidence){var ev=node('span',null,p.evidence); ev.style.color='var(--faint)'; ev.style.fontSize='11.5px'; kv('증거',ev)}
+  var a=node('a',null,p.origin.replace(/^https?:\/\//,'')); a.href=p.origin; a.target='_blank'; a.rel='noopener'; kv('출처',a);
+  if(p.author) kv('작가',p.author);
+  kv('규모',p.ext?p.files.toLocaleString()+' 항목 (원작자 사이트에서 직접 로드)':p.files.toLocaleString()+' 파일 · '+mb(p.bytes)); kv('포맷',p.formats.join(', ')||'—');
+  dt.appendChild(dl);
+  if(p.tags.length){var t=node('div','row tags'); p.tags.forEach(function(x){t.appendChild(node('span',null,x))}); dt.appendChild(t)}
+  var acts=node('div','row');
+  acts.appendChild(copyBtn('id·주소 복사',packLine(p),'복사됨'));
+  acts.appendChild(copyBtn('팩 가져오기 명령',getCmd(p),'복사됨 — 프로젝트 폴더에서 실행'));
+  acts.appendChild(copyBtn('팩 URL',packBase(p),'복사됨'));
+  dt.appendChild(acts);
+  dt.appendChild(node('p','hint','AI 연결 프롬프트를 이미 붙였다면 「id·주소 복사」 한 줄이면 됩니다 — "이 팩으로 ○○ 만들어줘". 아직이면 위의 「AI에 연결하기」를 먼저 한 번.'));
+  if(p.ext) dt.appendChild(node('div','ext-note','🔗 외부 라이브러리 — 이 라이브러리에 파일을 복사해 두지 않고, 원작자 사이트에서 직접 읽습니다. '+(p.licenseNote||'')));
+  else if(p.license!=='CC0') dt.appendChild(node('p','warn','⚠ 이 팩은 CC BY — 게임 크레딧(또는 CREDITS.md)에 작가 표기가 필요합니다. 라이선스 원문은 팩의 license 파일 참고.'));
+  var sn=node('div'); sn.id='snip'; dt.appendChild(sn); renderSnippet(p,null);
+  var fs=node('div','files'); fs.id='files'; dt.appendChild(fs);
+  if(p.id==='lospec') renderPalettes(p,fs); else { fs.appendChild(node('h2',null,'파일')); fs.appendChild(node('div','hint','불러오는 중…')); loadFiles(p).then(function(){ if(S.sel===p.id) renderFiles(p)}) }
+}
+function showPreview(p,rel){
+  var pv=$('#pv'); if(!pv) return; pv.innerHTML=''; S.curFile=rel;
+  if(!rel){ if(p.thumb){var i=new Image();i.src=thumbUrl(p);i.alt='';if(p.type==='2d'||p.type==='icon')i.className='px';pv.appendChild(i)} else pv.appendChild(pvPlaceholder(p)); return }
+  var u=fileUrl(p,rel);
+  if(IMG.test(rel)){var im=new Image();im.src=u;im.alt='';im.onload=function(){if(im.naturalWidth<=128) im.className='px'};pv.appendChild(im)}
+  else if(AUD.test(rel)){var au=document.createElement('audio');au.controls=true;au.src=u;au.autoplay=true;pv.appendChild(au)}
+  else if(MOD.test(rel)){ pv.appendChild(node('div','hint','3D 불러오는 중…')); ensureModelViewer().then(function(){pv.innerHTML='';var mv=document.createElement('model-viewer');mv.setAttribute('src',u);mv.setAttribute('camera-controls','');mv.setAttribute('auto-rotate','');mv.setAttribute('shadow-intensity','0.6');mv.setAttribute('touch-action','pan-y');pv.appendChild(mv)}).catch(function(){pv.innerHTML='';pv.appendChild(node('div','hint','3D 미리보기 로드 실패'))}) }
+  else if(FONT.test(rel)){ var ff=new FontFace('pv'+Date.now(),'url('+u+')'); ff.load().then(function(f){document.fonts.add(f);var s=node('div',null,'The quick brown fox 123 가나다');s.style.cssText='font-size:28px;padding:24px;font-family:"'+f.family+'"';pv.innerHTML='';pv.appendChild(s)}).catch(function(){pv.appendChild(node('div','hint','폰트 미리보기 불가'))}) }
+  else pv.appendChild(pvPlaceholder(p));
+  pv.appendChild(node('div','cap',rel));
+}
+function ensureModelViewer(){
+  if(customElements.get('model-viewer')) return Promise.resolve();
+  return new Promise(function(res,rej){var s=document.createElement('script');s.type='module';s.src='https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js';s.onload=function(){customElements.whenDefined('model-viewer').then(res)};s.onerror=rej;document.head.appendChild(s)});
+}
+function snippetFor(p,rel){
+  var u=rel?fileUrl(p,rel):packBase(p), L=[];
+  if(p.ext&&p.extKind==='sprites'){
+    var it=rel&&p._files.find(function(f){return f[0]===rel}); var eid=it?it[3]:'<id>';
+    L.push('<'+'script src="'+p.base+'loader.js"></'+'script>',"const lib = await EffectLib.load('"+p.base+p.manifest+"');","await lib.preload(['"+eid+"']);","const fx = lib.play('"+eid+"', { loop: false });",'// 매 프레임: fx.update().draw(ctx, x, y, { scale: 1 });');
+    return L.join('\n');
+  }
+  if(!rel){
+    if(p.ext){ return '// 외부 라이브러리 — 매니페스트: '+p.base+p.manifest+'\n// 파일 URL = '+p.base+'<파일 경로>\n// (가져오기) '+getCmd(p) }
+    L.push('// 팩 전체를 프로젝트로 가져오기 (Node 18+, 필요한 파일만 받음)');
+    L.push(getCmd(p));
+    L.push('');
+    L.push('// 또는 로더로 바로 읽기');
+    L.push('<script src="'+S.vols.main.base+'loader.js"></'+'script>');
+    L.push("const lib = await AssetLib.load('"+S.vols.main.base+"');");
+    L.push("const url = lib.url('"+p.id+"', '<파일 경로>');");
+    return L.join('\n');
+  }
+  if(IMG.test(rel)){ L.push("const url = '"+u+"';",'// Phaser:  this.load.image(\'key\', url)','// PixiJS:  const tex = await PIXI.Assets.load(url)','// Canvas:  const img = new Image(); img.src = url') }
+  else if(MOD.test(rel)){ L.push("import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';","new GLTFLoader().load('"+u+"', (g) => scene.add(g.scene));") }
+  else if(/\.fbx$/i.test(rel)){ L.push("import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';","new FBXLoader().load('"+u+"', (o) => scene.add(o));") }
+  else if(/\.obj$/i.test(rel)){ L.push("import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';","new OBJLoader().load('"+u+"', (o) => scene.add(o));") }
+  else if(AUD.test(rel)){ L.push("const url = '"+u+"';",'new Audio(url).play();','// Phaser: this.load.audio(\'key\', url)   Howler: new Howl({ src: [url] })') }
+  else if(/\.hdr$/i.test(rel)){ L.push("import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';","new RGBELoader().load('"+u+"', (t) => { t.mapping = THREE.EquirectangularReflectionMapping; scene.environment = scene.background = t; });") }
+  else if(FONT.test(rel)){ L.push("const f = new FontFace('MyFont', 'url("+u+")'); await f.load(); document.fonts.add(f);") }
+  else L.push("const url = '"+u+"';");
+  return L.join('\n');
+}
+function renderSnippet(p,rel){
+  var box=$('#snip'); if(!box) return; box.innerHTML=''; box.appendChild(node('h2',null,rel?'코드 — 선택한 파일':'코드'));
+  var code=snippetFor(p,rel); box.appendChild(node('pre','snip',code));
+  var r=node('div','row'); r.appendChild(copyBtn('코드 복사',code)); if(rel){r.appendChild(copyBtn('파일 URL',fileUrl(p,rel),'URL 복사됨'));r.appendChild(copyBtn('경로',p.path+rel,'경로 복사됨'))} box.appendChild(r);
+}
+function renderFiles(p){
+  var fs=$('#files'); if(!fs) return; fs.innerHTML=''; var all=p.ext?p._files:(S.files[p.id]||[]);
+  var q=S.ff.toLowerCase(); var list=q?all.filter(function(f){return (f[0]+' '+(f[2]||'')).toLowerCase().indexOf(q)>=0}):all;
+  fs.appendChild(node('h2',null,'파일 '+list.length.toLocaleString()+(q?' / '+all.length.toLocaleString():'')));
+  var inp=node('input'); inp.placeholder='파일 이름·폴더로 거르기'; inp.value=S.ff; inp.oninput=function(){S.ff=inp.value;S.page=0;clearTimeout(inp._t);inp._t=setTimeout(function(){renderFiles(p);var n=$('#files input');if(n){n.focus();n.setSelectionRange(n.value.length,n.value.length)}},180)}; fs.appendChild(inp);
+  var PS=60, pages=Math.max(1,Math.ceil(list.length/PS)); S.page=Math.min(S.page,pages-1); var cur=list.slice(S.page*PS,S.page*PS+PS);
+  var imgs=cur.filter(function(f){return IMG.test(f[0])}), rest=cur.filter(function(f){return !IMG.test(f[0])});
+  if(imgs.length){ var g=node('div','fgrid'); imgs.forEach(function(f){ var b=node('button','fi'+(S.curFile===f[0]?' sel':'')); var im=new Image(); im.loading='lazy'; im.alt=''; im.src=fileUrl(p,f[0]); im.onload=function(){if(im.naturalWidth<=128) im.className='px'}; b.appendChild(im); b.appendChild(node('span',null,fname(f))); b.title=(f[2]||f[0])+(f[1]?' · '+mb(f[1]):''); b.onclick=function(){pick(p,f[0])}; g.appendChild(b)}); fs.appendChild(g) }
+  if(rest.length){ var box=node('div'); if(imgs.length) box.style.marginTop='8px'; rest.forEach(function(f){ var kind=AUD.test(f[0])?'▶':MOD.test(f[0])?'◇':FONT.test(f[0])?'Aa':'·'; var r=node('button','frow'+(S.curFile===f[0]?' sel':'')); r.appendChild(node('span','s',kind)); var n=node('span','n',f[2]||f[0]); n.title=f[0]; r.appendChild(n); r.appendChild(node('span','s',f[1]?mb(f[1]):'')); r.onclick=function(){pick(p,f[0])}; box.appendChild(r)}); fs.appendChild(box) }
+  if(pages>1){ var pg=node('div','pager'); var pv=node('button','btn sm','‹'); pv.disabled=S.page===0; pv.onclick=function(){S.page--;renderFiles(p)}; var nx=node('button','btn sm','›'); nx.disabled=S.page>=pages-1; nx.onclick=function(){S.page++;renderFiles(p)}; pg.appendChild(pv); pg.appendChild(node('span',null,(S.page+1)+' / '+pages)); pg.appendChild(nx); fs.appendChild(pg) }
+}
+function pick(p,rel){ showPreview(p,rel); renderSnippet(p,rel); renderFiles(p); var pv=$('#pv'); if(pv&&pv.scrollIntoView&&window.innerWidth<=860) pv.scrollIntoView({block:'nearest'}) }
+function renderPalettes(p,fs){
+  fs.appendChild(node('h2',null,'팔레트 (클릭하면 HEX 목록 복사)')); var inp=node('input'); inp.placeholder='팔레트 이름 거르기'; fs.appendChild(inp);
+  var box=node('div','pal'); fs.appendChild(box);
+  fetch(packBase(p)+'palettes.json').then(function(r){return r.json()}).then(function(arr){
+    function draw(){ box.innerHTML=''; var q=inp.value.toLowerCase(); arr.filter(function(x){return !q||(x.title+' '+x.slug).toLowerCase().indexOf(q)>=0}).slice(0,150).forEach(function(x){
+      var b=node('button'); var sw=node('div','sw'); x.colors.slice(0,16).forEach(function(c){var i=node('i');i.style.background='#'+c;sw.appendChild(i)}); b.appendChild(sw); b.appendChild(node('small',null,x.title)); b.appendChild(node('small',null,x.count+'색 · '+x.author));
+      b.onclick=function(){copyText(x.colors.join('\n')).then(function(){toast(x.title+' — HEX '+x.count+'색 복사됨')})}; box.appendChild(b)}) }
+    inp.oninput=draw; draw()});
+}
+
+/* ---------- 해시 상태 ---------- */
+function writeHash(){var h=[];if(S.q)h.push('q='+encodeURIComponent(S.q));if(S.type!=='all')h.push('type='+S.type);if(S.sel)h.push('pack='+encodeURIComponent(S.sel));history.replaceState(null,'',h.length?'#'+h.join('&'):location.pathname+location.search)}
+function readHash(){var o={};location.hash.replace(/^#/,'').split('&').forEach(function(kv){var i=kv.indexOf('=');if(i>0)o[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))});return o}
+function sync(){renderFilters();renderList();writeHash()}
+
+function applyHash(first){
+  var h=readHash(); S.q=h.q||''; $('#q').value=S.q; S.type=h.type||'all';
+  if(!first||true){ renderFilters(); renderList(); }
+  if(h.pack&&S.by[h.pack]){ if(S.sel!==h.pack) openPack(h.pack) } else if(S.sel){ S.sel=null; $('#detail').classList.remove('open'); $('#detail').innerHTML='<div class="empty">왼쪽에서 팩을 고르세요.<br>미리보기·정보·복사용 URL이 여기 나타납니다.</div>'; renderList() }
+}
+window.addEventListener('hashchange',function(){ if(S.packs.length) applyHash(false) });
+
+
+/* ---------- 외부 라이브러리 연결 (externals.json) — 복사하지 않고 원작자 사이트의 매니페스트를 읽는다 ---------- */
+function extPack(src,c,m){
+  var items=m.assets||[];
+  var files=items.map(function(a){
+    if(c.kind==='sprites') return [a.file,0,a.id+' · '+(a.category||'')+(a.frames>1?' · '+a.frames+'f':''),a.id];
+    var d=(a.animations&&a.animations[a.defaultAnimation||'default'])||{}; return [d.file||a.file||'',0,a.id+(a.name&&a.name!==a.id?' · '+a.name:''),a.id];
+  }).filter(function(f){return f[0]});
+  var tags=[]; items.forEach(function(a){ if(a.category&&tags.indexOf(a.category)<0) tags.push(a.category) });
+  var fm=[]; files.forEach(function(f){var e=f[0].split('.').pop(); if(fm.indexOf(e)<0) fm.push(e)});
+  return {id:src.id+'/'+c.id,name:src.name+' · '+c.name,type:c.type,source:'external',origin:src.site,author:src.author,license:src.license,licenseNote:src.licenseNote,evidence:'',attribution:false,tags:tags.slice(0,14),volume:null,path:'',thumb:files.length?src.site+files[0][0]:null,files:files.length,bytes:0,formats:fm,kinds:{},ext:true,base:src.site,manifest:c.manifest,extKind:c.kind,_files:files};
+}
+function loadExternals(){
+  return fetch('externals.json').then(function(r){return r.json()}).then(function(j){
+    return Promise.all(j.sources.map(function(src){
+      return Promise.all(src.collections.map(function(c){
+        return fetch(src.site+c.manifest).then(function(r){return r.json()}).then(function(m){return extPack(src,c,m)}).catch(function(){return null});
+      }));
+    })).then(function(arr){
+      var add=[].concat.apply([],arr).filter(Boolean); if(!add.length) return;
+      add.forEach(function(p){S.packs.push(p);S.by[p.id]=p});
+      renderFilters(); renderList();
+      var h=readHash(); if(h.pack&&S.by[h.pack]&&S.by[h.pack].ext&&S.sel!==h.pack) openPack(h.pack);
+    });
+  }).catch(function(){});
+}
+
+/* ---------- AI 연결 ---------- */
+function aiConnect(){
+  fetch('AI-GUIDE.md').then(function(r){return r.text()}).then(function(t){return copyText(t)}).then(function(){toast('연결 프롬프트 복사됨 — 프로젝트 규칙 파일(CLAUDE.md / AGENTS.md 등)에 붙여넣으세요')}).catch(function(){toast('복사 실패 — AI-GUIDE.md 를 직접 열어 복사하세요')});
+}
+
+/* ---------- 시작 ---------- */
+fetch('packs.json').then(function(r){return r.json()}).then(function(j){
+  S.vols=j.volumes; if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)){S.vols.main.base=location.origin+'/';S.vols['3d'].base=location.origin+'/3d/'} S.packs=j.packs; j.packs.forEach(function(p){S.by[p.id]=p});
+  var tf=j.packs.reduce(function(s,p){return s+p.files},0), tb=j.packs.reduce(function(s,p){return s+p.bytes},0);
+  $('#sub').textContent='팩 '+j.packs.length+' · 파일 '+tf.toLocaleString()+' · '+mb(tb)+' · CC0 중심';
+  applyHash(true); loadExternals();
+}).catch(function(e){$('#list').innerHTML='<div class="empty">packs.json 을 불러오지 못했습니다.<br>'+esc(e.message)+'</div>'});
+var qt; $('#q').addEventListener('input',function(e){S.q=e.target.value;clearTimeout(qt);qt=setTimeout(sync,120)});
+$('#reset').onclick=function(){S.q='';S.type='all';S.source='all';S.lic='all';$('#q').value='';S.sel=null;$('#detail').classList.remove('open');S.ff='';sync()};
+$('#ai').onclick=aiConnect;
+document.addEventListener('keydown',function(e){if(e.key==='/'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();$('#q').focus()}});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "sources": [
+    {
+      "id": "nc",
+      "name": "나인크로니클 (주정민)",
+      "author": "주정민 / 나인크로니클",
+      "site": "https://jujeongmin.github.io/effect-character-library/",
+      "repo": "https://github.com/jujeongmin/effect-character-library",
+      "license": "미확인",
+      "licenseNote": "레포에 LICENSE 파일이 없다. 프로토타입에는 쓰되 상업 배포(Verse8 Listed/수익화) 전에 주정민 또는 나인크로니클 쪽에 배포 조건을 확인할 것.",
+      "loader": "loader.js",
+      "collections": [
+        { "id": "effects", "name": "이펙트 스프라이트", "type": "2d", "manifest": "effects.json", "kind": "sprites", "tagsFrom": "category" },
+        { "id": "characters", "name": "캐릭터", "type": "2d", "manifest": "characters.json", "kind": "characters", "tagsFrom": "category" },
+        { "id": "icons", "name": "아이콘", "type": "icon", "manifest": "icons.json", "kind": "characters", "tagsFrom": "category" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Game Asset Library
+> CC0 중심의 무료 게임 에셋 모음(Kenney, Quaternius, KayKit, Poly Haven, OpenGameArt, itch.io, game-icons.net, Lospec). 검색·미리보기·URL 직링크.
+
+- [연결 프롬프트(AI 규칙 파일용)](https://hakyong-tae.github.io/game-asset-library/AI-GUIDE.md): 사용법 전체
+- [팩 목록 JSON](https://hakyong-tae.github.io/game-asset-library/packs.json)
+- [파일 이름 색인 JSON](https://hakyong-tae.github.io/game-asset-library/search.json)
+- [CLI](https://hakyong-tae.github.io/game-asset-library/tools/use.mjs): search / info / get
+- [로더](https://hakyong-tae.github.io/game-asset-library/loader.js)
+- 3D·텍스처·HDRI 파일 호스팅: https://hakyong-tae.github.io/game-asset-library-3d/
