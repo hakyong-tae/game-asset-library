@@ -30,6 +30,10 @@
   await lib.files('<id>');                        // 팩 안 파일 목록
   lib.credits(['<id>', ...]);                     // CREDITS 마크다운
 
+도구·스킬 목록(게임 에셋 아님)
+  https://hakyong-tae.github.io/game-asset-library/tools.json — 영상·모션 제작용 도구/스킬 20개(Remotion, HyperFrames, GSAP, Lottie 등). 링크·라이선스 메모만 있고 코드는 복사하지 않는다.
+  ⚠ Remotion 은 직원 4명 이상 영리 조직이면 유료 라이선스가 필요하다 — 회사 업무에는 라이선스 확인 전까지 HyperFrames(Apache-2.0) 쪽을 우선 고려.
+
 규칙
   1. 라이선스: CC0 는 표기 불필요. CC BY(game-icons.net)는 CREDITS.md 에 작가 표기 필수.
   2. 서비스(배포)하는 게임은 필요한 파일만 프로젝트로 복사해 번들한다. GitHub Pages 직링크로 서비스하지 않는다.

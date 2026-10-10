@@ -35,6 +35,7 @@ async function main() {
       data.packs.push({ id: `${src.id}/${c.id}`, name: `${src.name} · ${c.name}`, type: c.type, license: src.license, licenseNote: src.licenseNote, author: src.author, origin: src.site, tags: [], files: files.length, bytes: 0, ext: true, base: src.site, manifest: c.manifest, _files: files });
     }
   } catch {}
+  let tools = []; try { tools = (await getJson(BASE + 'tools.json')).tools || []; } catch {}
   const by = Object.fromEntries(data.packs.map((p) => [p.id, p]));
   const url = (p, rel = '') => (p.ext ? p.base : data.volumes[p.volume].base + p.path) + (rel ? enc(rel) : '');
 
@@ -42,6 +43,8 @@ async function main() {
     const toks = rest.join(' ').toLowerCase().split(/\s+/).filter(Boolean);
     const hits = data.packs.filter((p) => (!flags.type || p.type === flags.type) && toks.every((t) => (p.id + ' ' + p.name + ' ' + p.tags.join(' ') + ' ' + p.author).toLowerCase().includes(t)));
     console.log(`팩 ${hits.length}개`); for (const p of hits.slice(0, 40)) console.log(`${p.id.padEnd(46)} ${p.type.padEnd(7)} ${p.license.padEnd(9)} ${String(p.files).padStart(6)}개 ${fmt(p.bytes).padStart(8)}  ${p.name}`);
+    const th = tools.filter((t) => (!flags.type || flags.type === 'tool') && toks.every((k) => (t.id + ' ' + t.name + ' ' + t.summary + ' ' + t.tags.join(' ')).toLowerCase().includes(k)));
+    if (th.length && toks.length) { console.log(`\n도구·스킬 ${th.length}개 (게임 에셋 아님 — 영상·모션 제작용, 링크만)`); for (const t of th.slice(0, 12)) console.log(`  ${t.id.padEnd(34)} ${t.license.padEnd(18)} ${t.repo}`); }
     if (flags.files !== false) {
       const s = await getJson(BASE + 'search.json'); const fh = [];
       for (const [i, nm] of s.e) { const id = s.ids[i]; const p = by[id]; if (!p || (flags.type && p.type !== flags.type)) continue; if (toks.every((t) => nm.includes(t) || id.toLowerCase().includes(t))) { fh.push(`${id}  ${nm}`); if (fh.length >= 40) break; } }

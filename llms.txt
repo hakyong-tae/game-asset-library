@@ -5,5 +5,6 @@
 - [팩 목록 JSON](https://hakyong-tae.github.io/game-asset-library/packs.json)
 - [파일 이름 색인 JSON](https://hakyong-tae.github.io/game-asset-library/search.json)
 - [CLI](https://hakyong-tae.github.io/game-asset-library/tools/use.mjs): search / info / get
+- [도구·스킬 목록 JSON](https://hakyong-tae.github.io/game-asset-library/tools.json): 영상·모션 제작 도구 20개(게임 에셋 아님, 링크·라이선스 메모만)
 - [로더](https://hakyong-tae.github.io/game-asset-library/loader.js)
 - 3D·텍스처·HDRI 파일 호스팅: https://hakyong-tae.github.io/game-asset-library-3d/
