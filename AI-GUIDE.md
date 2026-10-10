@@ -32,6 +32,8 @@
 
 도구·스킬 목록(게임 에셋 아님)
   https://hakyong-tae.github.io/game-asset-library/tools.json — 영상·모션 제작용 도구/스킬 20개(Remotion, HyperFrames, GSAP, Lottie 등). 링크·라이선스 메모만 있고 코드는 복사하지 않는다.
+  각 항목에 kinds 태그: ai-skill(AI에게 설치해 쓰는 스킬 — SKILL.md 포함) / library(코드에서 import 하는 라이브러리·엔진) / list(목록).
+  AI 스킬은 설치 전에 SKILL.md 를 읽어 내용을 확인하고, 설치(npx skills add 등)는 사용자 허락을 받은 뒤에 한다. 찾기: use.mjs search <키워드> --type tool --kind skill
   ⚠ Remotion 은 직원 4명 이상 영리 조직이면 유료 라이선스가 필요하다 — 회사 업무에는 라이선스 확인 전까지 HyperFrames(Apache-2.0) 쪽을 우선 고려.
 
 규칙

@@ -17,12 +17,22 @@
    "pushed": "2026-10-09",
    "lang": "JavaScript",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "모션",
     "playwright",
     "오디오"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 4,
+    "where": ".claude/skills/",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/claude-motion-design",
@@ -39,12 +49,22 @@
    "pushed": "2026-10-04",
    "lang": "Python",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "모션",
     "playwright",
     "ffmpeg"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 1,
+    "where": "skill/motion-design/",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/motion-graphics-skills",
@@ -61,11 +81,21 @@
    "pushed": "2026-09-30",
    "lang": "Shell",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "모션",
     "런치"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 13,
+    "where": "skills/",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/claude-remotion-skill",
@@ -82,11 +112,21 @@
    "pushed": "2026-08-12",
    "lang": "TypeScript",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "remotion",
     "자막"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 1,
+    "where": "remotion-motion-graphics/",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/klik-anim-skill-creation",
@@ -103,12 +143,22 @@
    "pushed": "2026-08-06",
    "lang": "Python",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "모션",
     "remotion",
     "카메라"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 3,
+    "where": "klik-anim/ 외",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/hyperframes-motion-reel-skill",
@@ -125,12 +175,22 @@
    "pushed": "2026-09-29",
    "lang": "",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "홍보",
     "hyperframes",
     "비트"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 1,
+    "where": "SKILL.md(루트)",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/product-launch-motion",
@@ -147,12 +207,22 @@
    "pushed": "2026-08-27",
    "lang": "JavaScript",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "홍보",
     "런치",
     "내레이션"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 1,
+    "where": "SKILL.md(루트)",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/animate",
@@ -169,12 +239,22 @@
    "pushed": "2026-10-05",
    "lang": "JavaScript",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "애니메이션",
     "스토리보드",
     "playwright"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 1,
+    "where": "plugins/animate/skills/",
+    "plugin": true,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/motion-design-skills",
@@ -191,13 +271,23 @@
    "pushed": "2026-06-22",
    "lang": "HTML",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "모션",
     "타이포",
     "로고",
     "remotion"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 9,
+    "where": "skills/",
+    "plugin": true,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/hyperframes-student-kit",
@@ -214,17 +304,27 @@
    "pushed": "2026-09-28",
    "lang": "HTML",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "hyperframes",
     "소재",
     "릴스"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 15,
+    "where": ".claude/skills/ (+ .agents/skills 동일본)",
+    "plugin": false,
+    "note": "스킬 키트(15종).",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/hyperframes",
    "name": "hyperframes",
-   "category": "렌더링·애니메이션 엔진",
+   "category": "렌더링 엔진 + 스킬",
    "summary": "HTML을 그대로 MP4로 렌더링(에이전트용). Remotion 대안으로 가장 안전한 라이선스",
    "repo": "https://github.com/heygen-com/hyperframes",
    "homepage": "https://hyperframes.dev",
@@ -236,17 +336,29 @@
    "pushed": "2026-10-10",
    "lang": "TypeScript",
    "tags": [
-    "렌더링·애니메이션 엔진",
+    "AI 스킬",
+    "라이브러리",
     "영상",
     "html",
     "렌더링",
     "mp4"
-   ]
+   ],
+   "kinds": [
+    "ai-skill",
+    "library"
+   ],
+   "skills": {
+    "count": 21,
+    "where": "skills/ (+ 플러그인)",
+    "plugin": true,
+    "note": "엔진 + 사용자용 스킬 21개. 저장소 내부용 스킬(.agents/skills 등)은 제외한 수.",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/remotion",
    "name": "remotion",
-   "category": "렌더링·애니메이션 엔진",
+   "category": "라이브러리·엔진",
    "summary": "React로 영상 제작",
    "repo": "https://github.com/remotion-dev/remotion",
    "homepage": "https://remotion.dev",
@@ -258,11 +370,21 @@
    "pushed": "2026-10-10",
    "lang": "TypeScript",
    "tags": [
-    "렌더링·애니메이션 엔진",
+    "라이브러리",
     "영상",
     "react",
     "렌더링"
-   ]
+   ],
+   "kinds": [
+    "library"
+   ],
+   "skills": {
+    "count": 0,
+    "where": "",
+    "plugin": false,
+    "note": "SKILL.md 85개는 저장소 기여자용 내부 스킬. 사용자용 공식 스킬은 remotion-skills 항목.",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/remotion-skills",
@@ -279,16 +401,26 @@
    "pushed": "2026-10-07",
    "lang": "TypeScript",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "remotion",
     "공식"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 12,
+    "where": "skills/",
+    "plugin": false,
+    "note": "Remotion 공식 스킬.",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/GSAP",
    "name": "GSAP",
-   "category": "렌더링·애니메이션 엔진",
+   "category": "라이브러리·엔진",
    "summary": "웹 애니메이션 라이브러리(HyperFrames 타임라인 구동에 사용)",
    "repo": "https://github.com/greensock/GSAP",
    "homepage": "https://gsap.com",
@@ -300,17 +432,27 @@
    "pushed": "2026-04-13",
    "lang": "JavaScript",
    "tags": [
-    "렌더링·애니메이션 엔진",
+    "라이브러리",
     "웹",
     "애니메이션",
     "타임라인",
     "ui"
-   ]
+   ],
+   "kinds": [
+    "library"
+   ],
+   "skills": {
+    "count": 0,
+    "where": "",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/motion-design-skill",
    "name": "motion-design-skill",
-   "category": "보조",
+   "category": "Claude 스킬",
    "summary": "범용 모션 디자인 원리(타이밍·이징 등)",
    "repo": "https://github.com/LottieFiles/motion-design-skill",
    "homepage": "",
@@ -322,16 +464,26 @@
    "pushed": "2026-05-18",
    "lang": "",
    "tags": [
-    "보조",
+    "AI 스킬",
     "모션",
     "원리",
     "가이드"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 1,
+    "where": "skills/motion-design/",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/awesome-motion-design-agent-skills",
    "name": "awesome-motion-design-agent-skills",
-   "category": "보조",
+   "category": "목록",
    "summary": "GSAP·Motion·Remotion·Lottie·Rive 스킬 지도(큐레이션 목록)",
    "repo": "https://github.com/frankxai/awesome-motion-design-agent-skills",
    "homepage": "https://github.com/frankxai/awesome-motion-design-agent-skills",
@@ -343,11 +495,22 @@
    "pushed": "2026-10-10",
    "lang": "",
    "tags": [
-    "보조",
+    "AI 스킬",
     "목록",
     "모션",
     "스킬맵"
-   ]
+   ],
+   "kinds": [
+    "list",
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 5,
+    "where": "skills/ (+ 플러그인)",
+    "plugin": true,
+    "note": "큐레이션 목록이 주 목적. 자체 스킬 5개 포함.",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/motion-graphics",
@@ -364,11 +527,21 @@
    "pushed": "2026-10-08",
    "lang": "HTML",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "영상",
     "모션",
     "소재"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 2,
+    "where": "skills/",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/motion-dev-animations-skill",
@@ -385,16 +558,26 @@
    "pushed": "2026-03-30",
    "lang": "TypeScript",
    "tags": [
-    "Claude 스킬",
+    "AI 스킬",
     "웹",
     "애니메이션",
     "motion.dev"
-   ]
+   ],
+   "kinds": [
+    "ai-skill"
+   ],
+   "skills": {
+    "count": 1,
+    "where": "SKILL.md(루트)",
+    "plugin": false,
+    "note": "Motion.dev 라이브러리를 쓰는 법을 가르치는 스킬.",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/motion",
    "name": "motion",
-   "category": "렌더링·애니메이션 엔진",
+   "category": "라이브러리·엔진",
    "summary": "Framer Motion의 새 버전(React·JS 애니메이션 라이브러리)",
    "repo": "https://github.com/motiondivision/motion",
    "homepage": "https://motion.dev",
@@ -406,17 +589,27 @@
    "pushed": "2026-10-09",
    "lang": "TypeScript",
    "tags": [
-    "렌더링·애니메이션 엔진",
+    "라이브러리",
     "웹",
     "애니메이션",
     "react",
     "ui"
-   ]
+   ],
+   "kinds": [
+    "library"
+   ],
+   "skills": {
+    "count": 0,
+    "where": "",
+    "plugin": false,
+    "note": "SKILL.md 2개는 저장소 기여자용 내부 스킬.",
+    "scanned": "2026-10-10"
+   }
   },
   {
    "id": "tool/lottie-web",
    "name": "lottie-web",
-   "category": "렌더링·애니메이션 엔진",
+   "category": "라이브러리·엔진",
    "summary": "After Effects 애니메이션을 웹에서 재생(Lottie). MP4 대신 Lottie가 필요할 때",
    "repo": "https://github.com/airbnb/lottie-web",
    "homepage": "",
@@ -428,12 +621,22 @@
    "pushed": "2025-09-01",
    "lang": "JavaScript",
    "tags": [
-    "렌더링·애니메이션 엔진",
+    "라이브러리",
     "웹",
     "lottie",
     "애니메이션",
     "ui"
-   ]
+   ],
+   "kinds": [
+    "library"
+   ],
+   "skills": {
+    "count": 0,
+    "where": "",
+    "plugin": false,
+    "note": "",
+    "scanned": "2026-10-10"
+   }
   }
  ]
 }

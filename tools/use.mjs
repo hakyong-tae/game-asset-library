@@ -21,7 +21,7 @@ const fmt = (b) => (b >= 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.r
 
 async function main() {
   if (!cmd || cmd === 'help') {
-    console.log('사용법:\n  search <키워드...> [--type 2d|3d|audio|texture|icon|hdri|palette] [--files]\n  info <id>\n  get <id> <dest> [--filter 문자열] [--only png,glb] [--credits CREDITS.md]\n환경변수 ASSET_LIB_BASE 로 다른 베이스 지정 가능');
+    console.log('사용법:\n  search <키워드...> [--type 2d|3d|audio|texture|icon|hdri|palette|tool] [--kind skill|lib|list] [--files]\n  info <id>\n  get <id> <dest> [--filter 문자열] [--only png,glb] [--credits CREDITS.md]\n환경변수 ASSET_LIB_BASE 로 다른 베이스 지정 가능');
     return;
   }
   const data = await getJson(BASE + 'packs.json');
@@ -43,8 +43,9 @@ async function main() {
     const toks = rest.join(' ').toLowerCase().split(/\s+/).filter(Boolean);
     const hits = data.packs.filter((p) => (!flags.type || p.type === flags.type) && toks.every((t) => (p.id + ' ' + p.name + ' ' + p.tags.join(' ') + ' ' + p.author).toLowerCase().includes(t)));
     console.log(`팩 ${hits.length}개`); for (const p of hits.slice(0, 40)) console.log(`${p.id.padEnd(46)} ${p.type.padEnd(7)} ${p.license.padEnd(9)} ${String(p.files).padStart(6)}개 ${fmt(p.bytes).padStart(8)}  ${p.name}`);
-    const th = tools.filter((t) => (!flags.type || flags.type === 'tool') && toks.every((k) => (t.id + ' ' + t.name + ' ' + t.summary + ' ' + t.tags.join(' ')).toLowerCase().includes(k)));
-    if (th.length && toks.length) { console.log(`\n도구·스킬 ${th.length}개 (게임 에셋 아님 — 영상·모션 제작용, 링크만)`); for (const t of th.slice(0, 12)) console.log(`  ${t.id.padEnd(34)} ${t.license.padEnd(18)} ${t.repo}`); }
+    const KIND = { skill: 'ai-skill', 'ai-skill': 'ai-skill', lib: 'library', library: 'library', list: 'list' }; const wantKind = flags.kind && KIND[flags.kind];
+    const th = tools.filter((t) => (!flags.type || flags.type === 'tool') && (!wantKind || (t.kinds || []).includes(wantKind)) && toks.every((k) => (t.id + ' ' + t.name + ' ' + t.summary + ' ' + t.tags.join(' ')).toLowerCase().includes(k)));
+    if (th.length && toks.length) { console.log(`\n도구·스킬 ${th.length}개 (게임 에셋 아님 — 영상·모션 제작용, 링크만)`); for (const t of th.slice(0, 20)) console.log(`  ${t.id.padEnd(40)} ${(t.kinds || []).join('+').padEnd(16)} ${t.license.padEnd(18)} ${t.repo}`); }
     if (flags.files !== false) {
       const s = await getJson(BASE + 'search.json'); const fh = [];
       for (const [i, nm] of s.e) { const id = s.ids[i]; const p = by[id]; if (!p || (flags.type && p.type !== flags.type)) continue; if (toks.every((t) => nm.includes(t) || id.toLowerCase().includes(t))) { fh.push(`${id}  ${nm}`); if (fh.length >= 40) break; } }

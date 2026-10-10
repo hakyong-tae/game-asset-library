@@ -51,6 +51,8 @@ select{background:var(--card);color:var(--text);border:1px solid var(--line);bor
 .lic{position:absolute;right:6px;top:6px;font-size:10px;padding:1px 6px;border-radius:999px;background:#0a7a55cc;color:#fff}
 .lic.by{background:#b97512cc}
 .lic.unk{background:#7a3b3bcc}
+.tag.ai{background:var(--accent);color:#fff}
+.sep{width:1px;height:18px;background:var(--line);margin:0 4px}
 .ext-note{border:1px dashed var(--warn);border-radius:8px;padding:8px 10px;margin:10px 0;color:var(--warn);font-size:12px}
 .meta{display:flex;align-items:center;gap:6px;padding:7px 9px}
 .meta .nm{flex:1;min-width:0;font-family:var(--mono);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -123,7 +125,7 @@ pre.snip{background:var(--bg);border:1px solid var(--line);border-radius:8px;pad
 (function(){
 'use strict';
 var $=function(s,r){return (r||document).querySelector(s)};
-var S={packs:[],vols:{},by:{},type:'all',source:'all',lic:'all',q:'',sel:null,idx:null,idxLoading:false,files:{},page:0,ff:'',curFile:null};
+var S={packs:[],vols:{},by:{},type:'all',tkind:'all',source:'all',lic:'all',q:'',sel:null,idx:null,idxLoading:false,files:{},page:0,ff:'',curFile:null};
 var TYPES=[['all','전체'],['2d','2D'],['3d','3D'],['audio','오디오'],['texture','텍스처'],['icon','아이콘'],['hdri','HDRI'],['palette','팔레트'],['tool','도구·스킬']];
 var GLYPH={'2d':'🖼','3d':'🧊',audio:'🔊',texture:'🧱',icon:'⚔',hdri:'🌅',palette:'🎨',tool:'🛠'};
 var SRC={kenney:'Kenney',oga:'OpenGameArt',itch:'itch.io',ph:'Poly Haven',superpowers:'Superpowers','game-icons':'game-icons.net',lospec:'Lospec',nc:'나인크로니클(정민)',tool:'도구·스킬 목록'};
@@ -135,6 +137,8 @@ function enc(rel){return rel.split('/').map(encodeURIComponent).join('/')}
 function packBase(p){if(p.tool) return p.repo; return p.ext?p.base:S.vols[p.volume].base+p.path}
 function thumbUrl(p){return /^https?:/.test(p.thumb)?p.thumb:S.vols.main.base+p.thumb}
 function licBadge(p){if(p.tool) return [p.licenseKind==='ok'?p.license:p.licenseKind==='custom'?'조건부':'확인필요', p.licenseKind==='ok'?'':p.licenseKind==='custom'?' by':' unk'];return p.license==='CC0'?['CC0','']:p.license==='CC BY 3.0'?['CC BY',' by']:['미확인',' unk']}
+var KIND_LABEL={'ai-skill':'AI 스킬','library':'라이브러리·엔진','list':'목록'};
+function kindTag(p){var k=p.tkinds||[],ai=k.indexOf('ai-skill')>=0,lib=k.indexOf('library')>=0,ls=k.indexOf('list')>=0;return ai&&lib?'AI 스킬 + 엔진':ls&&ai?'목록 + AI 스킬':ai?'AI 스킬':ls?'목록':'라이브러리'}
 function kfmt(n){return n>=1000?(n/1000).toFixed(n>=10000?0:1)+'k':String(n)}
 function fname(f){return f[2]||f[0].split('/').pop()}
 function fileUrl(p,rel){return packBase(p)+enc(rel)}
@@ -169,6 +173,7 @@ function visible(){
     if(S.type!=='all'&&p.type!==S.type) return false;
     if(S.source!=='all'&&srcKey(p)!==S.source) return false;
     if(S.lic!=='all'&&p.license!==S.lic) return false;
+    if(S.type==='tool'&&S.tkind!=='all'&&(p.tkinds||[]).indexOf(S.tkind)<0) return false;
     return match(p,toks);
   });
 }
@@ -178,6 +183,8 @@ function renderFilters(){
   TYPES.forEach(function(t){ if(t[0]!=='all'&&!cnt[t[0]]) return;
     var b=node('button','chip'+(S.type===t[0]?' on':''),t[1]); var c=node('b',null,cnt[t[0]]||0); b.appendChild(c);
     b.onclick=function(){S.type=t[0];sync()}; box.appendChild(b)});
+  if(S.type==='tool'){ box.appendChild(node('span','sep')); var kc={all:0,'ai-skill':0,library:0,list:0}; S.packs.forEach(function(p){ if(!p.tool) return; kc.all++; (p.tkinds||[]).forEach(function(k){kc[k]=(kc[k]||0)+1}) });
+    [['all','전체'],['ai-skill','AI 스킬'],['library','라이브러리·엔진'],['list','목록']].forEach(function(k){ var b=node('button','chip'+(S.tkind===k[0]?' on':''),k[1]); b.appendChild(node('b',null,kc[k[0]]||0)); b.onclick=function(){S.tkind=k[0];sync()}; box.appendChild(b) }) }
   box.appendChild(node('span','sp'));
   var s1=node('select'); s1.appendChild(new Option('출처: 전체','all'));
   Object.keys(SRC).forEach(function(k){ if(S.packs.some(function(p){return srcKey(p)===k})) s1.appendChild(new Option(SRC[k],k))}); s1.value=S.source; s1.onchange=function(){S.source=s1.value;sync()};
@@ -189,7 +196,7 @@ function card(p){
   var im=node('div','im');
   if(p.thumb){var img=new Image();img.loading='lazy';img.alt='';img.src=thumbUrl(p); if(p.type==='2d'||p.type==='icon') img.className='px'; im.appendChild(img)}
   else im.appendChild(node('div','ph',GLYPH[p.type]||'📦'));
-  im.appendChild(node('span','tag',TYPE_LABEL[p.type]+(p.sub?' · '+p.sub:'')));
+  im.appendChild(node('span','tag'+(p.tool&&(p.tkinds||[]).indexOf('ai-skill')>=0?' ai':''),p.tool?kindTag(p):TYPE_LABEL[p.type]+(p.sub?' · '+p.sub:'')));
   var lb=licBadge(p); im.appendChild(node('span','lic'+lb[1],lb[0]));
   c.appendChild(im);
   var m=node('div','meta'); var nm=node('span','nm',p.name); nm.title=p.id; m.appendChild(nm); m.appendChild(copyBtn('복사',packLine(p),'복사됨 — id·주소 한 줄')); c.appendChild(m);
@@ -333,12 +340,12 @@ function renderPalettes(p,fs){
 }
 
 /* ---------- 해시 상태 ---------- */
-function writeHash(){var h=[];if(S.q)h.push('q='+encodeURIComponent(S.q));if(S.type!=='all')h.push('type='+S.type);if(S.sel)h.push('pack='+encodeURIComponent(S.sel));history.replaceState(null,'',h.length?'#'+h.join('&'):location.pathname+location.search)}
+function writeHash(){var h=[];if(S.q)h.push('q='+encodeURIComponent(S.q));if(S.type!=='all')h.push('type='+S.type);if(S.type==='tool'&&S.tkind!=='all')h.push('kind='+S.tkind);if(S.sel)h.push('pack='+encodeURIComponent(S.sel));history.replaceState(null,'',h.length?'#'+h.join('&'):location.pathname+location.search)}
 function readHash(){var o={};location.hash.replace(/^#/,'').split('&').forEach(function(kv){var i=kv.indexOf('=');if(i>0)o[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))});return o}
 function sync(){renderFilters();renderList();writeHash()}
 
 function applyHash(first){
-  var h=readHash(); S.q=h.q||''; $('#q').value=S.q; S.type=h.type||'all';
+  var h=readHash(); S.q=h.q||''; $('#q').value=S.q; S.type=h.type||'all'; S.tkind=h.kind||'all';
   if(!first||true){ renderFilters(); renderList(); }
   if(h.pack&&S.by[h.pack]){ if(S.sel!==h.pack) openPack(h.pack) } else if(S.sel){ S.sel=null; $('#detail').classList.remove('open'); $('#detail').innerHTML='<div class="empty">왼쪽에서 팩을 고르세요.<br>미리보기·정보·복사용 URL이 여기 나타납니다.</div>'; renderList() }
 }
@@ -368,7 +375,7 @@ function loadExternals(){
       renderFilters(); renderList();
       var h=readHash(); if(h.pack&&S.by[h.pack]&&S.by[h.pack].ext&&S.sel!==h.pack) openPack(h.pack);
     });
-  }).catch(function(){});
+  }).catch(function(e){ if(window.console) console.error('[asset-library]',e) });
 }
 
 
@@ -379,22 +386,24 @@ function renderTool(p){
   dt.appendChild(node('h1',null,p.name)); dt.appendChild(node('div','id',p.id));
   var pv=node('div','pv'); var box=node('div'); box.style.cssText='padding:24px;text-align:center'; box.appendChild(node('div','ph','🛠')); var sm=node('div',null,p.summary); sm.style.cssText='margin-top:6px;font-size:14px'; box.appendChild(sm); pv.appendChild(box); dt.appendChild(pv);
   var dl=node('dl'); function kv(k,v){dl.appendChild(node('dt',null,k)); var dd=node('dd'); if(typeof v==='string') dd.textContent=v; else dd.appendChild(v); dl.appendChild(dd)}
-  kv('분류',p.category); kv('라이선스',p.license);
+  kv('분류',p.category+' · '+kindTag(p)); kv('라이선스',p.license);
+  if((p.tkinds||[]).indexOf('ai-skill')>=0&&p.skills&&p.skills.count) kv('AI 스킬',p.skills.count+'개 · 위치 '+p.skills.where+(p.skills.plugin?' · 플러그인 지원':'')); else if((p.tkinds||[]).indexOf('ai-skill')<0) kv('AI 스킬','없음 (코드에서 import 해서 쓰는 라이브러리)');
   var a=node('a',null,p.repo.replace(/^https?:\/\//,'')); a.href=p.repo; a.target='_blank'; a.rel='noopener'; kv('저장소',a);
   if(p.homepage){var h=node('a',null,p.homepage.replace(/^https?:\/\//,'')); h.href=p.homepage; h.target='_blank'; h.rel='noopener'; kv('홈페이지',h)}
   kv('상태','★ '+p.stars.toLocaleString()+' · 마지막 푸시 '+p.pushed+(p.lang?' · '+p.lang:'')+' (스냅샷 '+S.toolsSnap+')');
   dt.appendChild(dl);
+  if(p.skills&&p.skills.note) dt.appendChild(node('p','hint','ℹ '+p.skills.note));
   if(p.licenseNote) dt.appendChild(node(p.licenseKind==='ok'?'p':'div',p.licenseKind==='ok'?'hint':'ext-note',(p.licenseKind==='ok'?'':'⚠ ')+p.licenseNote));
   var t=node('div','row tags'); p.tags.forEach(function(x){t.appendChild(node('span',null,x))}); dt.appendChild(t);
   if(p.install){ dt.appendChild(node('h2',null,'설치 (README 기준)')); dt.appendChild(node('pre','snip',p.install)); var r=node('div','row'); r.appendChild(copyBtn('설치 줄 복사',p.install)); r.appendChild(copyBtn('저장소 URL',p.repo,'복사됨')); dt.appendChild(r) }
-  dt.appendChild(node('p','hint','이 항목은 게임 에셋이 아니라 영상·모션 제작 도구/스킬입니다. 이 라이브러리에는 코드를 복사해 두지 않고 링크만 둡니다. 스킬은 AI에게 주는 지시문이라 설치 전에 SKILL.md 내용을 읽어 보세요.'));
+  dt.appendChild(node('p','hint','이 항목은 게임 에셋이 아니라 영상·모션 제작 도구/스킬입니다. 이 라이브러리에는 코드를 복사해 두지 않고 링크만 둡니다. AI 스킬은 AI에게 주는 지시문이므로, 설치 전에 SKILL.md 내용을 읽어 보고 AI가 직접 설치하게 둘 때는 허락을 받도록 하세요.'));
 }
 function loadTools(){
   return fetch('tools.json').then(function(r){return r.json()}).then(function(j){
-    S.toolsSnap=j.snapshot; var add=j.tools.map(function(t){return {id:t.id,name:t.name,type:'tool',source:'tool',tool:true,summary:t.summary,repo:t.repo,homepage:t.homepage,license:t.license,licenseKind:t.licenseKind,licenseNote:t.licenseNote,install:t.install,stars:t.stars,pushed:t.pushed,lang:t.lang,category:t.category,author:'',origin:t.repo,tags:t.tags,evidence:'',thumb:null,files:0,bytes:0,formats:[],kinds:{},volume:null,path:''}});
+    S.toolsSnap=j.snapshot; var add=j.tools.map(function(t){return {id:t.id,name:t.name,type:'tool',source:'tool',tool:true,summary:t.summary,repo:t.repo,homepage:t.homepage,license:t.license,licenseKind:t.licenseKind,licenseNote:t.licenseNote,install:t.install,stars:t.stars,pushed:t.pushed,lang:t.lang,category:t.category,tkinds:t.kinds||[],skills:t.skills||{},author:'',origin:t.repo,tags:t.tags,evidence:'',thumb:null,files:0,bytes:0,formats:[],kinds:{},volume:null,path:''}});
     add.forEach(function(p){S.packs.push(p);S.by[p.id]=p}); renderFilters(); renderList();
     var h=readHash(); if(h.pack&&S.by[h.pack]&&S.by[h.pack].tool&&S.sel!==h.pack) openPack(h.pack);
-  }).catch(function(){});
+  }).catch(function(e){ if(window.console) console.error('[asset-library]',e) });
 }
 
 /* ---------- AI 연결 ---------- */
